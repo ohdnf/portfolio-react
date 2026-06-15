@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Activity, Braces, Cloud, Database, MessageCircle } from 'lucide-react'
+import { Activity, Braces, Cloud, Database, MessageCircle, Moon, Sun } from 'lucide-react'
 import './App.css'
 import { ProjectPanel } from './components/ProjectPanel'
 import { ProjectTabs } from './components/ProjectTabs'
@@ -21,19 +21,30 @@ function GitHubIcon() {
 
 function App() {
   const [activeProjectId, setActiveProjectId] = useState<ProjectId>('kokkok')
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
   const activeProject = useMemo(
     () => projects.find((project) => project.id === activeProjectId) ?? projects[0],
     [activeProjectId],
   )
   const titleLines = profile.title.split(' / ')
+  const isDark = theme === 'dark'
 
   return (
-    <main className="portfolio-shell">
+    <main className="portfolio-shell" data-theme={theme}>
       <nav className="top-nav" aria-label="포트폴리오 섹션">
         <span className="nav-title">Portfolio</span>
         <div className="nav-links">
           <a href="#principles">Working Style</a>
           <a href="#projects">Projects</a>
+          <button
+            className="theme-toggle"
+            type="button"
+            onClick={() => setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'))}
+            aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
+            aria-pressed={isDark}
+          >
+            {isDark ? <Sun size={19} aria-hidden="true" /> : <Moon size={19} aria-hidden="true" />}
+          </button>
           <a className="nav-icon-link" href="https://github.com/jupyohong" target="_blank" rel="noreferrer" aria-label="GitHub 프로필 열기">
             <GitHubIcon />
           </a>
@@ -89,6 +100,11 @@ function App() {
         <ProjectTabs projects={projects} activeProjectId={activeProjectId} onChange={setActiveProjectId} />
         <ProjectPanel project={activeProject} />
       </section>
+
+      <footer className="site-footer" aria-label="Copyright">
+        <p>© 2026 Jupyo Hong. Backend Portfolio.</p>
+        <a href="#summary">Back to top</a>
+      </footer>
     </main>
   )
 }
