@@ -38,9 +38,8 @@ export function ArchitectureMap({ diagram }: ArchitectureMapProps) {
   const nodesById = new Map(diagram.nodes.map((node) => [node.id, node]))
 
   return (
-    <section className="visual-section" aria-labelledby={titleId}>
-      <div className="section-heading">
-        <p className="eyebrow">Architecture</p>
+    <article className="visual-subsection" aria-labelledby={titleId}>
+      <div className="subsection-heading">
         <h3 id={titleId}>{diagram.title}</h3>
         <p>{diagram.description}</p>
       </div>
@@ -119,6 +118,6 @@ export function ArchitectureMap({ diagram }: ArchitectureMapProps) {
           })}
         </svg>
       </div>
-    </section>
+    </article>
   )
 }

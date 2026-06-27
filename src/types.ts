@@ -14,7 +14,6 @@ export interface Profile {
   title: string
   summary: string
   focus: string[]
-  principles: string[]
   metrics: Metric[]
 }
 
@@ -91,6 +90,23 @@ export interface CaseStudy {
   result: string
 }
 
+export interface ProjectBrief {
+  problem: string
+  action: string
+  result: string
+}
+
+export interface ContributionHighlight {
+  title: string
+  detail: string
+  tone?: MetricTone
+}
+
+export interface TechDecision {
+  name: string
+  reason: string
+}
+
 export interface Project {
   id: ProjectId
   name: string
@@ -98,8 +114,11 @@ export interface Project {
   role: string
   serviceUrl?: string
   summary: string
+  brief: ProjectBrief
   metrics: Metric[]
+  contributionHighlights: ContributionHighlight[]
   responsibilities: string[]
+  techDecisions: TechDecision[]
   techStack: string[]
   caseStudies: CaseStudy[]
   architectureDiagrams?: ArchitectureDiagram[]

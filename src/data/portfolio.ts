@@ -19,11 +19,6 @@ export const profile: Profile = {
     'AWS ECS/ECR/S3/CDK, Docker, GitHub Actions 기반 배포 자동화',
     '외부 협력사와 영어 커뮤니케이션 및 API 연동 테스트 조율',
   ],
-  principles: [
-    '서비스 초기에 빠르게 움직이되, 운영 중 반복되는 문제는 구조로 해결합니다.',
-    '외부 연동은 API 호출보다 상태 전이, 오류 정규화, 재현 가능한 테스트 문서를 우선합니다.',
-    '백엔드 리드는 코드 작성뿐 아니라 데이터 모델, PR 리뷰, 배포, 장애 대응의 연결을 책임져야 한다고 봅니다.',
-  ],
   metrics: [
     {
       label: 'Experience',
@@ -261,10 +256,35 @@ export const projects: Project[] = [
     serviceUrl: 'https://laosmartmobility.com/service/kokkok',
     summary:
       '라오스 사용자를 대상으로 결제, 충전, 주문, 예약, 포인트, e-Gift, 이벤트를 하나의 계정으로 제공하는 슈퍼앱입니다. 백엔드 초기 구조, ERD 기반 데이터 모델링, 공통 라이브러리, 외부 결제·POS 연동, 배포 구조 정비를 담당했습니다.',
+    brief: {
+      problem:
+        '슈퍼앱 초기 백엔드 구조, 결제 플랫폼 가입/월렛/계좌 상태, POS callback, 배포 구조를 동시에 정리해야 했습니다.',
+      action:
+        'NestJS 모노레포, ERD, 공통 라이브러리, 트랜잭션 경계, 결제/POS 상태 전이, CDK 배포 구조를 설계하고 PR 리뷰와 협력사 테스트 기준을 조율했습니다.',
+      result:
+        '앱별 API 경계, 공통 인프라 재사용, 외부 연동 테스트 체계, 코드 리뷰 가능한 배포 흐름과 관측성 기반을 마련했습니다.',
+    },
     metrics: [
       { label: 'Service Scope', value: '슈퍼앱', caption: '결제·주문·예약·포인트 통합', tone: 'blue' },
       { label: 'Managed Runtime', value: 'ECS', caption: '앱별 서비스와 배포 경계 정리', tone: 'teal' },
       { label: 'IaC', value: 'CDK v2', caption: '배포 이력과 소유 경계 코드화', tone: 'amber' },
+    ],
+    contributionHighlights: [
+      {
+        title: '백엔드 리드 역할 구체화',
+        detail: 'API 설계 방향 조율, Backend PR 리뷰 총괄, 공통 라이브러리 구조 설계, 배포/관측성 개선을 주도했습니다.',
+        tone: 'blue',
+      },
+      {
+        title: '외부 연동 테스트 기준 정리',
+        detail: '결제 플랫폼과 POS 시스템 협력사에 시퀀스 다이어그램과 Postman Collection을 공유해 같은 기준으로 연동을 검증했습니다.',
+        tone: 'teal',
+      },
+      {
+        title: '운영 가능한 배포 경계 마련',
+        detail: 'ECS 서비스, 스케줄러, DocumentDB, GitHub Actions OIDC 흐름을 CDK 기반으로 정리해 변경 이력을 코드 리뷰 안에서 확인할 수 있게 했습니다.',
+        tone: 'amber',
+      },
     ],
     responsibilities: [
       'NestJS 모노레포 초기 구조와 공통 라이브러리 기반 구축',
@@ -274,6 +294,24 @@ export const projects: Project[] = [
       'POS 시스템 협력사의 주문, 재고, e-Gift, 예약 callback 연동과 협력사 테스트 조율',
       'AWS CDK 기반 ECS, Scheduler, DocumentDB, GitHub Actions OIDC 배포 구조 정비',
       'Datadog APM과 JSON 구조화 로그 기반의 운영 가시성 확보',
+    ],
+    techDecisions: [
+      {
+        name: 'NestJS Monorepo',
+        reason: '앱별 API 서버와 공통 도메인/인프라 라이브러리를 분리해 초기 개발 속도와 재사용성을 함께 확보했습니다.',
+      },
+      {
+        name: 'AWS CDK',
+        reason: '콘솔 변경에 흩어질 수 있는 ECS, 스케줄러, 권한, 배포 이력을 코드 리뷰 가능한 형태로 관리했습니다.',
+      },
+      {
+        name: 'Datadog',
+        reason: 'APM과 JSON 구조화 로그를 연결해 trace-log correlation 기반의 장애 분석 흐름을 만들었습니다.',
+      },
+      {
+        name: 'Redis / Valkey',
+        reason: '캐시, 락, 연결 재시도와 장애 추적성을 운영 관점에서 관리하기 위해 사용했습니다.',
+      },
     ],
     techStack: [
       'Node.js',
@@ -321,11 +359,36 @@ export const projects: Project[] = [
     serviceUrl: 'https://laosmartmobility.com/service/move',
     summary:
       'KOKKOK Express에서 검증한 운송/배송/결제 도메인을 사람 이동 중심 라이드 헤일링 서비스로 전환한 플랫폼입니다. 고객 앱, 기사 앱, 관리자 웹, socket 서버, scheduler 서버의 백엔드 구조와 운영 개선을 담당했습니다.',
+    brief: {
+      problem:
+        '실시간 운송 상태와 결제/정산 흐름을 안정적으로 운영하면서 관리자 대량 조회 부하를 사용자 요청 흐름과 분리해야 했습니다.',
+      action:
+        'Socket.IO, scheduler, 결제/정산/ERP 재처리 흐름을 운영하고 slow query log와 EXPLAIN으로 병목을 분석해 서버 역할 분리와 read replica 구성을 추진했습니다.',
+      result:
+        '70만 다운로드, 45만 가입자 규모 서비스에서 사용자 요청 흐름과 관리자 운영 작업의 영향 범위를 분리하는 기반을 마련했습니다.',
+    },
     metrics: [
       { label: 'Downloads', value: '70만+', caption: '2025년 말 기준 누적 다운로드', tone: 'blue' },
       { label: 'Users', value: '45만+', caption: '2025년 말 기준 가입자', tone: 'teal' },
       { label: 'Requests', value: '일일 약 1만', caption: '운행 요청, 약 3천 건 운행', tone: 'amber' },
       { label: 'Launch', value: '2023 Q4', caption: '라오스 현지 서비스 출시', tone: 'slate' },
+    ],
+    contributionHighlights: [
+      {
+        title: '실시간 운송 상태 운영',
+        detail: '운송 요청, 기사 수락, 탑승, 완료, 취소, 결제 상태를 API와 Socket.IO 이벤트 흐름으로 연결했습니다.',
+        tone: 'blue',
+      },
+      {
+        title: 'DB 부하 원인 분석',
+        detail: '관리자 엑셀 추출 부하를 slow query log와 EXPLAIN으로 추적하고 쿼리/스키마 튜닝, 서버 역할 분리를 추진했습니다.',
+        tone: 'teal',
+      },
+      {
+        title: '운영성 배치와 재처리',
+        detail: '정산, 리워드, 기사 랭킹, ERP 실패 재처리, 운송 만료 처리를 스케줄러 서버의 운영 작업으로 관리했습니다.',
+        tone: 'amber',
+      },
     ],
     responsibilities: [
       'NestJS 기반 모노레포와 앱별 API, scheduler, socket 서버 구조 설계',
@@ -335,6 +398,24 @@ export const projects: Project[] = [
       '스케줄러 서버 라이브러리 및 구조 개선, 정산/리워드/ERP 재처리 배치 관리',
       'GitHub Actions, Docker, AWS ECR/ECS 기반 배포 흐름 개선',
       'Redis 연결 재시도, keep-alive, 장애 알림 메일을 통한 추적성 개선',
+    ],
+    techDecisions: [
+      {
+        name: 'Socket.IO',
+        reason: '고객 앱, 기사 앱, 관리자 웹에 운송 상태와 위치 이벤트를 실시간으로 동기화하기 위해 사용했습니다.',
+      },
+      {
+        name: 'Scheduler Server',
+        reason: '정산, 리워드, ERP 재처리, 운송 만료처럼 반복되는 운영 작업을 API 요청 흐름과 분리했습니다.',
+      },
+      {
+        name: 'MariaDB Replica',
+        reason: '관리자 대량 조회가 사용자 요청에 주는 영향을 줄이기 위해 읽기 부하 분산 기반을 마련했습니다.',
+      },
+      {
+        name: 'Redis',
+        reason: '실시간 서비스 운영 중 연결 재시도, keep-alive, 장애 알림으로 추적성과 대응성을 높였습니다.',
+      },
     ],
     techStack: [
       'Node.js',
@@ -379,10 +460,35 @@ export const projects: Project[] = [
     role: '백엔드 개발 / 운송·배송·결제 도메인 기반 구축',
     summary:
       'KOKKOK Move의 전신 프로젝트입니다. 물류 배송 서비스로 시작해 사람 이동을 지원하는 모빌리티 서비스로 방향을 전환했고, 차량 호출, 배송, 기사, 결제, 정산 도메인 경험이 이후 Move 설계의 기반이 되었습니다.',
+    brief: {
+      problem:
+        '물류 서비스에서 운송, 결제, 정산, 기사 운영 도메인을 빠르게 검증하고 이후 모빌리티 전환에 활용할 기반이 필요했습니다.',
+      action:
+        'Express API, MySQL/Knex transaction, 결제 callback/history, 기사 포인트 원장, 배포/헬스체크를 구축하고 개선했습니다.',
+      result:
+        'KOKKOK Move로 이어지는 운송 상태 전이와 금전성 데이터 처리 경험을 확보했습니다.',
+    },
     metrics: [
       { label: 'Domain', value: 'Mobility', caption: '배송에서 라이드 헤일링으로 확장', tone: 'blue' },
       { label: 'Backend', value: 'Express', caption: 'Node.js API 서버 운영', tone: 'slate' },
       { label: 'Payment', value: 'QR', caption: '결제 callback과 이력 관리', tone: 'teal' },
+    ],
+    contributionHighlights: [
+      {
+        title: '운송/배송 API 기반 구축',
+        detail: '고객 앱, 기사 앱, 관리자 웹에서 사용하는 차량 호출, 배송, 기사, 결제, 정산 API를 설계하고 구현했습니다.',
+        tone: 'blue',
+      },
+      {
+        title: '금전성 이력 추적',
+        detail: '결제 callback 중복/실패 상황에 대비해 payment history와 기사 포인트 원장 처리 흐름을 정리했습니다.',
+        tone: 'teal',
+      },
+      {
+        title: '운영 배포 기본기 정리',
+        detail: 'PM2, Docker, ECR, healthcheck, non-root 실행, 배포 문서화를 통해 운영 가능한 배포 절차를 마련했습니다.',
+        tone: 'slate',
+      },
     ],
     responsibilities: [
       'Node.js Express 기반 고객 앱, 기사 앱, 관리자 웹 API 설계/구현',
@@ -392,6 +498,24 @@ export const projects: Project[] = [
       'SMS OTP HMAC signature, timestamp TTL, rate limit 검증 적용',
       'Firebase FCM, AWS S3/SNS, Redis, MongoDB, ERP API, SMTP 연동 운영',
       'PM2, Docker, ECR 배포 구성과 healthcheck, non-root 실행, 배포 문서화',
+    ],
+    techDecisions: [
+      {
+        name: 'Express',
+        reason: '초기 서비스 요구사항을 빠르게 API로 구현하고 고객/기사/관리자 기능을 분리하기 위해 사용했습니다.',
+      },
+      {
+        name: 'Knex Transaction',
+        reason: '운송 상태, 결제 상태, 기사 포인트 원장처럼 함께 처리되어야 하는 금전성 변경을 명시적으로 관리했습니다.',
+      },
+      {
+        name: 'Redis / MongoDB',
+        reason: '캐시와 일부 운영성 데이터를 관계형 데이터와 분리해 다루기 위해 사용했습니다.',
+      },
+      {
+        name: 'PM2 / Docker / ECR',
+        reason: 'Node.js API 서버의 실행 설정과 이미지 배포 절차를 운영 문서와 함께 정리했습니다.',
+      },
     ],
     techStack: [
       'Node.js',

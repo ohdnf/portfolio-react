@@ -10,9 +10,8 @@ export function FlowSteps({ flow }: FlowStepsProps) {
   const titleId = useId()
 
   return (
-    <section className="visual-section" aria-labelledby={titleId}>
-      <div className="section-heading">
-        <p className="eyebrow">Flow</p>
+    <article className="visual-subsection" aria-labelledby={titleId}>
+      <div className="subsection-heading">
         <h3 id={titleId}>{flow.title}</h3>
         <p>{flow.description}</p>
       </div>
@@ -30,6 +29,6 @@ export function FlowSteps({ flow }: FlowStepsProps) {
           </li>
         ))}
       </ol>
-    </section>
+    </article>
   )
 }

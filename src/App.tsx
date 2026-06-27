@@ -34,20 +34,21 @@ function App() {
       <nav className="top-nav" aria-label="포트폴리오 섹션">
         <span className="nav-title">Portfolio</span>
         <div className="nav-links">
-          <a href="#principles">Working Style</a>
           <a href="#projects">Projects</a>
-          <button
-            className="theme-toggle"
-            type="button"
-            onClick={() => setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'))}
-            aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
-            aria-pressed={isDark}
-          >
-            {isDark ? <Sun size={19} aria-hidden="true" /> : <Moon size={19} aria-hidden="true" />}
-          </button>
-          <a className="nav-icon-link" href="https://github.com/jupyohong" target="_blank" rel="noreferrer" aria-label="GitHub 프로필 열기">
-            <GitHubIcon />
-          </a>
+          <div className="nav-actions" aria-label="포트폴리오 도구">
+            <button
+              className="theme-toggle"
+              type="button"
+              onClick={() => setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'))}
+              aria-label={isDark ? '라이트 모드로 전환' : '다크 모드로 전환'}
+              aria-pressed={isDark}
+            >
+              {isDark ? <Sun size={19} aria-hidden="true" /> : <Moon size={19} aria-hidden="true" />}
+            </button>
+            <a className="nav-icon-link" href="https://github.com/jupyohong" target="_blank" rel="noreferrer" aria-label="GitHub 프로필 열기">
+              <GitHubIcon />
+            </a>
+          </div>
         </div>
       </nav>
 
@@ -72,20 +73,6 @@ function App() {
               </div>
             )
           })}
-        </div>
-      </section>
-
-      <section className="principles-band" id="principles" aria-labelledby="principles-title">
-        <div className="section-heading">
-          <p className="eyebrow">Working Style</p>
-          <h2 id="principles-title">업무 방식과 지향점</h2>
-        </div>
-        <div className="principle-list">
-          {profile.principles.map((principle) => (
-            <article key={principle}>
-              <p>{principle}</p>
-            </article>
-          ))}
         </div>
       </section>
 
