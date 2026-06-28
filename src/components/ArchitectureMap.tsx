@@ -1,5 +1,5 @@
 import { useId } from 'react'
-import type { ArchitectureDiagram, ArchitectureNode } from '../types'
+import type { ArchitectureDiagram, ArchitectureGroup, ArchitectureNode } from '../types'
 
 interface ArchitectureMapProps {
   diagram: ArchitectureDiagram
@@ -17,8 +17,18 @@ function centerOf(node: ArchitectureNode) {
   }
 }
 
+function isNodeInGroup(node: ArchitectureNode, group: ArchitectureGroup) {
+  const center = centerOf(node)
+
+  return center.x >= group.x && center.x <= group.x + group.width && center.y >= group.y && center.y <= group.y + group.height
+}
+
 function wrapLabel(label: string) {
   return label.split('\n')
+}
+
+function formatNodeTitle(node: ArchitectureNode) {
+  return node.label.replaceAll('\n', ' ')
 }
 
 function wrapDetail(detail: string) {
@@ -42,6 +52,26 @@ export function ArchitectureMap({ diagram }: ArchitectureMapProps) {
       <div className="subsection-heading">
         <h3 id={titleId}>{diagram.title}</h3>
         <p>{diagram.description}</p>
+      </div>
+
+      <div className="architecture-summary" aria-label={`${diagram.title} 모바일 요약`}>
+        {diagram.groups.map((group) => {
+          const groupNodes = diagram.nodes.filter((node) => isNodeInGroup(node, group))
+
+          return (
+            <article className="architecture-summary-card" key={group.id}>
+              <h4>{group.label}</h4>
+              <ul>
+                {groupNodes.map((node) => (
+                  <li key={node.id}>
+                    <strong>{formatNodeTitle(node)}</strong>
+                    {node.detail ? <span>{node.detail}</span> : null}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          )
+        })}
       </div>
 
       <div className="architecture-frame">
@@ -99,7 +129,7 @@ export function ArchitectureMap({ diagram }: ArchitectureMapProps) {
             return (
               <g className={`arch-node tone-${node.tone ?? 'slate'}`} key={node.id}>
                 <title>
-                  {node.label.replace('\n', ' ')}
+                  {formatNodeTitle(node)}
                   {node.detail ? ` - ${node.detail}` : ''}
                 </title>
                 <rect x={node.x} y={node.y} width={width} height={height} rx="8" />

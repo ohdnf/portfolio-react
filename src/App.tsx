@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Activity, Braces, Cloud, Database, MessageCircle, Moon, Sun } from 'lucide-react'
 import './App.css'
 import { ProjectPanel } from './components/ProjectPanel'
@@ -7,6 +7,39 @@ import { profile, projects } from './data/portfolio'
 import type { ProjectId } from './types'
 
 const capabilityIcons = [Braces, Database, Activity, Cloud, MessageCircle]
+const themeStorageKey = 'portfolio-theme'
+
+type Theme = 'light' | 'dark'
+
+function isTheme(value: string | null): value is Theme {
+  return value === 'light' || value === 'dark'
+}
+
+function getStoredTheme() {
+  try {
+    return window.localStorage.getItem(themeStorageKey)
+  } catch {
+    return null
+  }
+}
+
+function storeTheme(theme: Theme) {
+  try {
+    window.localStorage.setItem(themeStorageKey, theme)
+  } catch {
+    // Ignore storage failures so the theme toggle still works for the current session.
+  }
+}
+
+function getInitialTheme(): Theme {
+  const storedTheme = getStoredTheme()
+
+  if (isTheme(storedTheme)) {
+    return storedTheme
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
 
 function GitHubIcon() {
   return (
@@ -21,13 +54,17 @@ function GitHubIcon() {
 
 function App() {
   const [activeProjectId, setActiveProjectId] = useState<ProjectId>('kokkok')
-  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const [theme, setTheme] = useState<Theme>(getInitialTheme)
   const activeProject = useMemo(
     () => projects.find((project) => project.id === activeProjectId) ?? projects[0],
     [activeProjectId],
   )
   const titleLines = profile.title.split(' / ')
   const isDark = theme === 'dark'
+
+  useEffect(() => {
+    storeTheme(theme)
+  }, [theme])
 
   return (
     <main className="portfolio-shell" data-theme={theme}>
@@ -62,17 +99,28 @@ function App() {
           </h1>
           <p>{profile.summary}</p>
         </div>
-        <div className="summary-focus" aria-label="핵심 역량">
-          {profile.focus.map((focus, index) => {
-            const Icon = capabilityIcons[index % capabilityIcons.length]
-
-            return (
-              <div className="focus-item" key={focus}>
-                <Icon size={19} aria-hidden="true" />
-                <span>{focus}</span>
+        <div className="summary-aside">
+          <dl className="summary-metrics" aria-label="핵심 수치">
+            {profile.metrics.map((metric) => (
+              <div className={`metric-card tone-${metric.tone ?? 'slate'}`} key={metric.label}>
+                <dt>{metric.label}</dt>
+                <dd>{metric.value}</dd>
+                <p>{metric.caption}</p>
               </div>
-            )
-          })}
+            ))}
+          </dl>
+          <div className="summary-focus" aria-label="핵심 역량">
+            {profile.focus.map((focus, index) => {
+              const Icon = capabilityIcons[index % capabilityIcons.length]
+
+              return (
+                <div className="focus-item" key={focus}>
+                  <Icon size={19} aria-hidden="true" />
+                  <span>{focus}</span>
+                </div>
+              )
+            })}
+          </div>
         </div>
       </section>
 

@@ -2,6 +2,7 @@
   min-height: 100svh;
   color: var(--text);
   background: var(--bg);
+  color-scheme: light;
   transition:
     color 180ms ease,
     background-color 180ms ease;
@@ -20,6 +21,7 @@
   --teal: #2dd4bf;
   --amber: #f59e0b;
   --slate: #94a3b8;
+  color-scheme: dark;
 }
 
 .top-nav {
@@ -125,6 +127,50 @@
   color: var(--text);
   font-size: 17px;
   line-height: 1.74;
+  word-break: keep-all;
+}
+
+.summary-aside {
+  display: grid;
+  gap: 14px;
+  align-content: center;
+}
+
+.summary-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+}
+
+.metric-card {
+  min-height: 118px;
+  padding: 15px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+}
+
+.metric-card dt {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.metric-card dd {
+  margin: 8px 0 5px;
+  color: var(--text-strong);
+  font-size: 27px;
+  font-weight: 900;
+  line-height: 1.05;
+}
+
+.metric-card p {
+  margin: 0;
+  color: var(--text);
+  font-size: 13px;
+  line-height: 1.45;
   word-break: keep-all;
 }
 
@@ -259,6 +305,7 @@
 }
 
 .project-tabs button:focus-visible,
+.project-panel:focus-visible,
 .top-nav a:focus-visible,
 .theme-toggle:focus-visible,
 .site-footer a:focus-visible {
@@ -607,6 +654,51 @@
   min-width: 900px;
   width: 100%;
   height: auto;
+}
+
+.architecture-summary {
+  display: none;
+}
+
+.architecture-summary-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  padding: 14px;
+}
+
+.architecture-summary-card h4 {
+  margin: 0 0 10px;
+  color: var(--text-strong);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.architecture-summary-card ul {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.architecture-summary-card li {
+  display: grid;
+  gap: 2px;
+  border-left: 3px solid var(--line-strong);
+  padding-left: 9px;
+}
+
+.architecture-summary-card strong {
+  color: var(--text-strong);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+.architecture-summary-card span {
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .arch-group rect {
@@ -975,6 +1067,10 @@
     padding: 12px;
   }
 
+  .summary-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .brief-grid,
   .contribution-grid,
   .schema-grid,
@@ -995,6 +1091,12 @@
     width: fit-content;
   }
 
+  .architecture-summary {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
   .timeline li {
     grid-template-columns: 1fr;
   }
@@ -1002,5 +1104,11 @@
   .site-footer {
     align-items: flex-start;
     flex-direction: column;
+  }
+}
+
+@media (max-width: 520px) {
+  .summary-metrics {
+    grid-template-columns: 1fr;
   }
 }

@@ -1,4 +1,5 @@
 import { CheckCircle2, ExternalLink, GitPullRequest, Layers, Server } from 'lucide-react'
+import { getProjectPanelId, getProjectTabId } from '../projectA11y'
 import type { Metric, Project } from '../types'
 import { ArchitectureMap } from './ArchitectureMap'
 import { CollapsibleSection } from './CollapsibleSection'
@@ -36,7 +37,13 @@ export function ProjectPanel({ project }: ProjectPanelProps) {
   const metricSummary = project.metrics.map(formatMetricSummary).join(' · ')
 
   return (
-    <article className="project-panel">
+    <article
+      className="project-panel"
+      id={getProjectPanelId(project.id)}
+      role="tabpanel"
+      aria-labelledby={getProjectTabId(project.id)}
+      tabIndex={0}
+    >
       <header className="project-header">
         <div>
           <p className="eyebrow">Selected Project</p>
